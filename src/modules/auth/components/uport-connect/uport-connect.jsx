@@ -5,17 +5,12 @@ import QRCode from 'qrcode.react'
 
 import { AppleAppStore, GooglePlayStore } from 'modules/common/components/icons/icons'
 
-import debounce from 'utils/debounce'
-import getValue from 'utils/get-value'
-
 import uPortSigningNotifier from 'modules/auth/helpers/uport-signing-notifier'
 
 import Styles from 'modules/auth/components/uport-connect/uport-connect.styles'
 
 export default class UportConnect extends Component {
   static propTypes = {
-    isMobile: PropTypes.bool.isRequired,
-    isMobileSmall: PropTypes.bool.isRequired,
     login: PropTypes.func.isRequired
   }
 
@@ -31,13 +26,10 @@ export default class UportConnect extends Component {
     )
 
     this.state = {
-      uri: '',
-      qrSize: 0
+      uri: ''
     }
 
     this.uPortURIHandler = this.uPortURIHandler.bind(this)
-    this.setQRSize = this.setQRSize.bind(this)
-    this.debouncedSetQRSize = debounce(this.setQRSize.bind(this))
   }
 
   componentWillMount() {
@@ -50,30 +42,6 @@ export default class UportConnect extends Component {
   }
 
   componentDidMount() {
-    this.setQRSize()
-
-    window.addEventListener('resize', this.debouncedSetQRSize)
-  }
-
-  setQRSize() {
-    const width = getValue(this, 'uPortCreate.clientWidth')
-
-    if (width) {
-      let qrSize
-
-      switch (true) {
-        case this.props.isMobileSmall:
-          qrSize = width / 2.5
-          break
-        case this.props.isMobile:
-          qrSize = width / 2.8
-          break
-        default:
-          qrSize = width / 3.5
-      }
-
-      this.setState({ qrSize })
-    }
   }
 
   uPortURIHandler(uri) {
